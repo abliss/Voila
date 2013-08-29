@@ -11,8 +11,8 @@
   	"128":"/images/logo-128.png"
   },
   "developer" : {
-    "name": "None",
-    "url": "None"
+    "name": "Sayak Sarkar",
+    "url": "http://sayak.in"
   },
   "permissions": {
     "device-storage:sdcard":{ "access": "readwrite"}
