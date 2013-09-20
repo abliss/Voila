@@ -1,4 +1,9 @@
 //index.html
+// TODO(abliss): this is highly device-dependent.
+// For the simulator, you might simlink this to
+// ~/.mozilla/firefox/????.default/extensions/r2d2b2g@mozilla.org/profile/fake-sdcard
+var SDCARD_PATH = "file:///sdcard";
+
 function validateForm()
 {
 	window.manifest = '{';
@@ -12,7 +17,8 @@ function validateForm()
 			return;
 		}
 		if (i==2) {
-			manifest += '\n  "launch_path": "/index.html", \n  "developer" : {';	
+			manifest += '\n  "launch_path": "' + SDCARD_PATH +
+			'/voila/' + window.appname + '/index.html", \n  "developer" : {';	
 		}
 		if (i<2) {
 			manifest += '\n' + '  "' + box.name + '"' + ': ' + '"' + box.value + '",';
@@ -68,7 +74,7 @@ function submitCode () {
 	 or install to the device or optionally return the application package as a zipped file to the user*/
 	store();
 	//fetch();
-	//install();
+	install();
 	//package();
 }
 
@@ -102,12 +108,16 @@ function store () {
 
 	request.onerror = function () {
 	  console.warn('Unable to write the file: ' + this.error);
+	  if (this && this.error && this.error.name) {
+		console.warn('Error name: ' + this.error.name);
+	  }
+	  alert("Could not write file. Maybe it already exists?");
 	}
 }
 
 function install () {
-	var manifestUrl = "voila/app/manifest.webapp";
-	var request = window.navigator.mozApps.installPackage(manifestUrl);
+	var manifestUrl = SDCARD_PATH + "/voila/" + window.appname + "/manifest.webapp";
+	var request = window.navigator.mozApps.install(manifestUrl);
 	request.onsuccess = function () {
 	  // Save the App object that is returned
 	  var appRecord = this.result;
